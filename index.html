@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Field Trip Report: Vindhyan Basin</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        slate: {
+                            850: '#151f32',
+                            950: '#0a0f18',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0f18;
+            color: #cbd5e1;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b; 
+        }
+
+        /* Background Pattern */
+        .bg-pattern {
+            background-image: radial-gradient(#f59e0b 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.03;
+        }
+
+        /* Tab Transitions */
+        .strat-pane {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .strat-pane.active {
+            display: block;
+            opacity: 1;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-link.active {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #fbbf24;
+            border-color: rgba(245, 158, 11, 0.2);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.1);
+        }
+        
+        .field-note-bg {
+            background-image: repeating-linear-gradient(transparent, transparent 23px, rgba(255,255,255,0.05) 24px);
+            background-attachment: local;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-500/30 selection:text-amber-200">
+
+    <!-- Fixed Backgrounds -->
+    <div class="fixed inset-0 z-0 bg-pattern pointer-events-none"></div>
+    <div class="fixed inset-0 z-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 pointer-events-none -z-10"></div>
+
+    <!-- Sidebar Navigation -->
+    <nav class="fixed hidden lg:flex flex-col w-72 h-screen border-r border-slate-800 bg-slate-950/80 backdrop-blur-xl p-6 z-40 overflow-y-auto">
+        <div class="mb-10 mt-4">
+            <div class="text-xs font-bold tracking-widest text-amber-500 mb-2 uppercase">Expedition Report</div>
+            <h1 class="text-xl font-bold text-white leading-tight">Vindhyan Basin Field Study</h1>
+            <p class="text-xs text-slate-500 mt-2"><i class="fa-solid fa-location-dot mr-1"></i> Central India Transect</p>
+        </div>
+        <div class="flex flex-col space-y-2" id="nav-menu">
+            <a href="#abstract" class="nav-link active flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 border border-transparent text-slate-400 hover:bg-slate-800">
+                <i class="fa-solid fa-book-open w-5 text-center"></i><span class="text-sm font-medium">Abstract & Exec Summary</span>
+            </a>
+            <a href="#intro" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 border border-transparent text-slate-400 hover:bg-slate-800">
+                <i class="fa-solid fa-compass w-5 text-center"></i><span class="text-sm font-medium">Introduction & Location</span>
+            </a>
+            <a href="#setting" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 border border-transparent text-slate-400 hover:bg-slate-800">
+                <i class="fa-solid fa-map w-5 text-center"></i><span class="text-sm font-medium">Geologic Setting</span>
+            </a>
+            <a href="#stratigraphy" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 border border-transparent text-slate-400 hover:bg-slate-800">
+                <i class="fa-solid fa-layer-group w-5 text-center"></i><span class="text-sm font-medium">Stratigraphy</span>
+            </a>
+            <a href="#sedimentology" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 border border-transparent text-slate-400 hover:bg-slate-800">
+                <i class="fa-solid fa-water w-5 text-center"></i><span class="text-sm font-medium">Sedimentology</span>
+            </a>
+            <a href="#paleontology" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 border border-transparent text-slate-400 hover:bg-slate-800">
+                <i class="fa-solid fa-microscope w-5 text-center"></i><span class="text-sm font-medium">Paleontology</span>
+            </a>
+            <a href="#tectonics" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 border border-transparent text-slate-400 hover:bg-slate-800">
+                <i class="fa-solid fa-chart-area w-5 text-center"></i><span class="text-sm font-medium">Tectonic Evolution</span>
+            </a>
+            <a href="#geochemistry" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 border border-transparent text-slate-400 hover:bg-slate-800">
+                <i class="fa-solid fa-flask w-5 text-center"></i><span class="text-sm font-medium">Geochemistry</span>
+            </a>
+            <a href="#economic" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 border border-transparent text-slate-400 hover:bg-slate-800">
+                <i class="fa-solid fa-gem w-5 text-center"></i><span class="text-sm font-medium">Economic Geology</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="lg:ml-72 relative z-10">
+        
+        <!-- Hero Section -->
+        <header class="relative h-[70vh] min-h-[600px] flex items-end pb-16 pt-32 px-6 md:px-16 overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <!-- Geologic Landscape Image -->
+                <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2000" alt="Vindhyan Escarpment" class="w-full h-full object-cover opacity-40">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent"></div>
+            </div>
+            
+            <div class="relative z-10 max-w-4xl">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-400 text-xs font-bold tracking-widest mb-6 uppercase">
+                    <i class="fa-regular fa-clock"></i>
+                    <span>Proterozoic Eon (1700 - 600 Mya)</span>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-6 tracking-tight leading-tight">
+                    Field Expedition Report: <br/>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-red-500">
+                        The Vindhyan Basin
+                    </span>
+                </h1>
+                <p class="text-xl text-slate-300 max-w-2xl leading-relaxed border-l-4 border-amber-500 pl-4 bg-slate-900/30 p-2 rounded-r">
+                    A comprehensive field analysis documenting structural mapping, lithostratigraphic correlation, and geochemical sampling across one of the world's largest stable intracratonic basins.
+                </p>
+                <div class="mt-8 flex gap-4 text-sm font-mono text-slate-400 bg-slate-900/60 inline-flex p-3 rounded-lg border border-slate-700/50 backdrop-blur-sm">
+                    <div><i class="fa-solid fa-user-pen mr-2 text-amber-500"></i>Lead Geologist</div>
+                    <div class="border-l border-slate-600 pl-4"><i class="fa-solid fa-calendar-day mr-2 text-amber-500"></i>Field Season 2026</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="px-6 md:px-16 pb-24 max-w-6xl mx-auto space-y-24 text-lg leading-relaxed mt-12">
+            
+            <!-- Abstract -->
+            <section id="abstract" class="scroll-mt-24 section-block">
+                <div class="flex items-center space-x-4 mb-8 border-b border-slate-700 pb-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 ring-1 ring-amber-500/20">
+                        <i class="fa-solid fa-book-open text-2xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-100 tracking-tight">Abstract & Executive Summary</h2>
+                </div>
+                
+                <div class="bg-gradient-to-br from-slate-900 to-slate-850 border border-slate-700/50 rounded-2xl p-8 backdrop-blur-sm shadow-xl">
+                    <p class="mb-4">
+                        The Vindhyan Basin, spanning Central India, represents one of the largest and most continuous Proterozoic sedimentary basins globally, covering approximately 1,60,000 km². During our expedition, we conducted extensive field mapping, stratigraphic logging, and sampling to understand the basin's evolution.
+                    </p>
+                    <p class="mb-4">
+                        Field observations confirm the division into two main domains: the Lower Vindhyan (Semri Group) and the Upper Vindhyan (Kaimur, Rewa, and Bhander Groups). Outcrop analysis of the Semri group reveals carbonate-rich and volcanic lithologies, while the overlying sequences are heavily clastic-dominated (shales and mature sandstones). Sedimentary structures—including multi-directional ripple marks, large-scale cross-bedding, hummocky cross-stratification, and extensive stromatolite bioherms—were systematically recorded. These indicate shifting depositional environments ranging from deeper marine and carbonate ramps to shallow marine, fluvial, and tidal mudflats.
+                    </p>
+                    <p class="mb-4">
+                        Structural mapping along the margins revealed profound controls exerted by the Great Boundary Fault (GBF) and the Son-Narmada Lineament (SNL), directly influencing sediment distribution and basin subsidence architecture. Although chronological constraints have historically been debated, our field search for macro-fossils yielded evidence of <em>Grypania</em> and <em>Chuaria</em>, correlating well with recent U-Pb zircon geochronology.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Introduction -->
+            <section id="intro" class="scroll-mt-24 section-block">
+                <div class="flex items-center space-x-4 mb-8 border-b border-slate-700 pb-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 ring-1 ring-amber-500/20">
+                        <i class="fa-solid fa-compass text-2xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-100 tracking-tight">Introduction & Geographical Setting</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-8">
+                    <div>
+                        <p class="mb-4">
+                            Sedimentary basins act as critical tectonic depressions where sediments accumulate over immense geologic timescales. Through compaction and lithification, these detrital and chemical sediments transform into the extensive sandstone, limestone, and shale formations we mapped during this expedition.
+                        </p>
+                        <p>
+                            The <strong>Vindhyan Basin</strong> is an exemplary Proterozoic intracratonic basin. Situated in Central India, it extends across Madhya Pradesh, Uttar Pradesh, Rajasthan, and parts of Bihar. Our field transects primarily focused on the northern margin of the Bundelkhand Craton, where the basal unconformity is spectacularly exposed.
+                        </p>
+                    </div>
+                    
+                    <!-- Field Note Box -->
+                    <div class="bg-amber-950/20 border border-amber-500/30 rounded-xl p-6 field-note-bg relative overflow-hidden shadow-lg">
+                        <div class="absolute top-0 right-0 bg-amber-500 text-slate-900 text-xs font-bold px-3 py-1 rounded-bl-lg">FIELD NOTE #01</div>
+                        <h3 class="text-lg font-bold text-amber-400 mb-2 font-mono"><i class="fa-solid fa-clipboard-list mr-2"></i>Expedition Objectives</h3>
+                        <ul class="space-y-2 text-amber-100/80 text-sm font-mono mt-4">
+                            <li class="flex gap-2"><i class="fa-solid fa-check text-amber-500 mt-1"></i> Document primary sedimentary structures to reconstruct paleo-environments.</li>
+                            <li class="flex gap-2"><i class="fa-solid fa-check text-amber-500 mt-1"></i> Assess tectonic contacts along the Son-Narmada Lineament.</li>
+                            <li class="flex gap-2"><i class="fa-solid fa-check text-amber-500 mt-1"></i> Collect limestone samples for micro-facies and stromatolite analysis.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Geological Map Integration -->
+                <figure class="my-8 rounded-2xl overflow-hidden border border-slate-700/50 shadow-2xl bg-slate-800/30">
+                    <img src="https://i.postimg.cc/J4XNGwJS/Screenshot-2026-05-01-012313.png" alt="Generalised geological map of the Vindhyan Basin" class="w-full h-auto object-cover max-h-[500px] bg-white">
+                    <figcaption class="p-4 bg-slate-900/90 text-sm text-slate-400 border-t border-slate-700/50 flex flex-col gap-2">
+                        <div class="flex items-center gap-2 text-amber-500 font-bold">
+                            <i class="fa-solid fa-map-location-dot"></i> Figure 1: Regional Map
+                        </div>
+                        The Vindhyan Basin occupies a central position on the Indian subcontinent, bounded by the Great Boundary Fault to the west and the Son-Narmada Lineament to the south. Our base camps were strategically located along the Son and Chambal river valleys to access key outcrops.
+                    </figcaption>
+                </figure>
+            </section>
+
+            <!-- Geologic Setting -->
+            <section id="setting" class="scroll-mt-24 section-block">
+                <div class="flex items-center space-x-4 mb-8 border-b border-slate-700 pb-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 ring-1 ring-amber-500/20">
+                        <i class="fa-solid fa-map text-2xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-100 tracking-tight">Geologic Setting & Tectonics</h2>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-slate-800/50 border border-emerald-500/30 rounded-2xl p-6 col-span-1 shadow-lg">
+                        <h4 class="text-emerald-400 font-bold mb-2 uppercase tracking-wider text-xs"><i class="fa-solid fa-ruler-combined mr-2"></i>Basin Extent</h4>
+                        <div class="text-4xl font-light text-white mb-2">1.6<span class="text-lg text-slate-400"> Lakh km²</span></div>
+                        <div class="text-xs text-slate-400 mt-4 font-mono bg-slate-900/50 p-2 rounded">
+                            COORDS: 24°N 80°E<br>
+                            ELEVATION: ~300-600m
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-800/50 border border-blue-500/30 rounded-2xl p-6 col-span-2 shadow-lg">
+                        <h4 class="text-blue-400 font-bold mb-4 uppercase tracking-wider text-xs"><i class="fa-solid fa-fault mr-2"></i>Major Structural Boundaries</h4>
+                        <div class="space-y-4">
+                            <div class="flex gap-4 items-start bg-slate-900/40 p-3 rounded-lg">
+                                <div class="w-8 h-8 rounded bg-blue-500/20 flex items-center justify-center text-blue-400 shrink-0"><i class="fa-solid fa-arrow-down"></i></div>
+                                <div>
+                                    <strong class="text-white text-base block">South: Son-Narmada Lineament (SNL)</strong>
+                                    <p class="text-sm text-slate-400">A major crustal discontinuity. Field evidence suggests it actively controlled basin subsidence and syn-sedimentary faulting during the Lower Vindhyan deposition.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 items-start bg-slate-900/40 p-3 rounded-lg">
+                                <div class="w-8 h-8 rounded bg-blue-500/20 flex items-center justify-center text-blue-400 shrink-0"><i class="fa-solid fa-arrow-left"></i></div>
+                                <div>
+                                    <strong class="text-white text-base block">West: Great Boundary Fault (GBF)</strong>
+                                    <p class="text-sm text-slate-400">Thrust fault marking the western margin, bringing older Aravalli rocks over Vindhyan sediments. Observed intense brecciation at the contact zone near Chittorgarh.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden mt-8">
+                    <div class="bg-slate-800 px-6 py-4 border-b border-slate-700">
+                        <h4 class="text-xl font-bold text-amber-500"><i class="fa-solid fa-shield-halved mr-2"></i>The Bundelkhand Craton Basement</h4>
+                    </div>
+                    <div class="p-6 grid md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <p class="mb-4 text-slate-300">
+                                The Vindhyan Basin is intimately associated with the underlying Bundelkhand Craton—an Archean stable block of crust. Our field mapping confirmed that the basin developed primarily on the craton's margins.
+                            </p>
+                            <p class="text-slate-300">
+                                At several key outcrops, we observed the profound unconformity separating the highly deformed, crystalline basement rocks (granites/gneisses) from the overlying, gently dipping sedimentary layers of the Semri Group. This lack of deformation in the cover sequence is the hallmark of an <strong>intracratonic basin</strong>.
+                            </p>
+                        </div>
+                        <div class="bg-slate-800/80 p-5 rounded-xl border border-slate-700">
+                            <h5 class="font-bold text-white mb-3 text-sm uppercase tracking-wide">Intracratonic Characteristics Observed:</h5>
+                            <ul class="space-y-3 text-sm text-slate-400">
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1"></i> <span>Strata are overwhelmingly horizontal or gently dipping (typically < 10°).</span></li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1"></i> <span>Complete absence of regional metamorphism.</span></li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1"></i> <span>Preservation of delicate primary structures (mud cracks, ripple marks).</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stratigraphy -->
+            <section id="stratigraphy" class="scroll-mt-24 section-block">
+                <div class="flex items-center space-x-4 mb-8 border-b border-slate-700 pb-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 ring-1 ring-amber-500/20">
+                        <i class="fa-solid fa-layer-group text-2xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-100 tracking-tight">Lithostratigraphy & Outcrop Data</h2>
+                </div>
+                
+                <p class="mb-8">
+                    The Vindhyan Supergroup presents a staggering ~4,000m thick succession. Our stratigraphic logging focused on the major unconformity separating the Lower and Upper Vindhyan sequences.
+                </p>
+
+                <!-- Interactive Stratigraphy Tabs -->
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden mb-12 shadow-2xl">
+                    <div class="flex flex-wrap border-b border-slate-700 bg-slate-800/50">
+                        <button onclick="switchStratTab('semri')" id="btn-semri" class="strat-btn flex-1 py-4 px-6 font-bold text-sm uppercase tracking-wider transition-colors border-b-2 active text-amber-400 border-amber-500 bg-slate-800">
+                            Lower: Semri Group
+                        </button>
+                        <button onclick="switchStratTab('kaimur')" id="btn-kaimur" class="strat-btn flex-1 py-4 px-6 font-bold text-sm uppercase tracking-wider transition-colors border-b-2 text-slate-500 border-transparent hover:text-slate-300">
+                            Upper: Kaimur Group
+                        </button>
+                        <button onclick="switchStratTab('rewa')" id="btn-rewa" class="strat-btn flex-1 py-4 px-6 font-bold text-sm uppercase tracking-wider transition-colors border-b-2 text-slate-500 border-transparent hover:text-slate-300">
+                            Upper: Rewa Group
+                        </button>
+                        <button onclick="switchStratTab('bhander')" id="btn-bhander" class="strat-btn flex-1 py-4 px-6 font-bold text-sm uppercase tracking-wider transition-colors border-b-2 text-slate-500 border-transparent hover:text-slate-300">
+                            Upper: Bhander Group
+                        </button>
+                    </div>
+                    
+                    <div class="p-6 md:p-8 min-h-[300px]">
+                        <!-- Semri Tab -->
+                        <div id="pane-semri" class="strat-pane active block opacity-100">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-2xl font-bold text-amber-500">Semri Group (Lower Vindhyan)</h3>
+                                <span class="bg-amber-500/20 text-amber-400 text-xs font-mono px-3 py-1 rounded border border-amber-500/30">Thickness: ~3000m</span>
+                            </div>
+                            <p class="text-slate-300 mb-6">The basal unit of the basin, resting directly on the Bundelkhand granite. Field exposures in the Son Valley reveal extensive carbonate platforms interbedded with volcaniclastics.</p>
+                            
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                                    <h4 class="font-bold text-white mb-2"><i class="fa-solid fa-hammer text-slate-400 mr-2"></i>Lithology</h4>
+                                    <p class="text-sm text-slate-400">Dominated by Limestones (Rohtas Formation), fine Shales, and Porcellanite (volcanic ash beds). The limestone is compact, occasionally bedded, and highly fossiliferous (microbial).</p>
+                                </div>
+                                <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                                    <h4 class="font-bold text-white mb-2"><i class="fa-solid fa-water text-slate-400 mr-2"></i>Paleoenvironment</h4>
+                                    <p class="text-sm text-slate-400">Stable, shallow marine carbonate platform. Low-energy settings allowing for the precipitation of calcium carbonate and extensive growth of stromatolite colonies.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kaimur Tab -->
+                        <div id="pane-kaimur" class="strat-pane hidden opacity-0">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-2xl font-bold text-orange-500">Kaimur Group (Upper Vindhyan)</h3>
+                                <span class="bg-orange-500/20 text-orange-400 text-xs font-mono px-3 py-1 rounded border border-orange-500/30">Thickness: ~300m - 400m</span>
+                            </div>
+                            <p class="text-slate-300 mb-6">Marks a dramatic shift in basin dynamics. The unconformity between Semri and Kaimur represents a major marine regression and a shift to siliciclastic sedimentation driven by uplift.</p>
+                            
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                                    <h4 class="font-bold text-white mb-2"><i class="fa-solid fa-hammer text-slate-400 mr-2"></i>Lithology & Formations</h4>
+                                    <p class="text-sm text-slate-400 mb-2">Comprises the basal <strong>Sasaram Sandstone</strong>, the carbonaceous/pyritic <strong>Bijaigarh Shale</strong>, the <strong>Scarp Sandstone</strong>, and is capped by the massive <strong>Dhandraul Quartzite</strong>.</p>
+                                    <ul class="text-xs text-slate-500 list-disc pl-4 space-y-1">
+                                        <li>Bijaigarh Shale contains significant organic matter (shale gas potential).</li>
+                                        <li>Dhandraul Quartzite is extremely mature, compact, and scarp-forming.</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                                    <h4 class="font-bold text-white mb-2"><i class="fa-solid fa-water text-slate-400 mr-2"></i>Paleoenvironment</h4>
+                                    <p class="text-sm text-slate-400">High-energy Fluvial (braided river systems) transitioning into coastal aeolian (wind-blown) dunes and shallow marine environments. </p>
+                                    <p class="text-sm text-slate-500 mt-2 font-mono text-xs">Evidence: Trough cross-bedding, channel lags, and asymmetrical ripples.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Rewa Tab -->
+                        <div id="pane-rewa" class="strat-pane hidden opacity-0">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-2xl font-bold text-emerald-500">Rewa Group (Upper Vindhyan)</h3>
+                                <span class="bg-emerald-500/20 text-emerald-400 text-xs font-mono px-3 py-1 rounded border border-emerald-500/30">Thickness: ~150m - 300m</span>
+                            </div>
+                            <p class="text-slate-300 mb-6">A transitional sedimentary sequence characterized by distinct cyclic deposition, reflecting frequent oscillations in sea level and sediment supply.</p>
+                            
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                                    <h4 class="font-bold text-white mb-2"><i class="fa-solid fa-hammer text-slate-400 mr-2"></i>Lithology & Formations</h4>
+                                    <p class="text-sm text-slate-400 mb-2">Features alternating shale-sandstone sequences: <strong>Panna Shale</strong>, <strong>Asan Sandstone</strong>, <strong>Jhiri Shale</strong>, and <strong>Govindgarh Sandstone</strong>.</p>
+                                    <ul class="text-xs text-slate-500 list-disc pl-4 space-y-1">
+                                        <li>Basal conglomerates near Panna are famously <strong class="text-emerald-400">diamondiferous</strong>.</li>
+                                        <li>Shales are thinly bedded and often ferruginous.</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                                    <h4 class="font-bold text-white mb-2"><i class="fa-solid fa-water text-slate-400 mr-2"></i>Paleoenvironment</h4>
+                                    <p class="text-sm text-slate-400">Mixed Fluvial, Deltaic, and Tidal flat settings. The presence of glauconite in some sandstone units indicates intermittent shallow marine incursions.</p>
+                                    <p class="text-sm text-slate-500 mt-2 font-mono text-xs">Evidence: Abundant desiccation (mud) cracks indicating subaerial exposure.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bhander Tab -->
+                        <div id="pane-bhander" class="strat-pane hidden opacity-0">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-2xl font-bold text-cyan-500">Bhander Group (Upper Vindhyan)</h3>
+                                <span class="bg-cyan-500/20 text-cyan-400 text-xs font-mono px-3 py-1 rounded border border-cyan-500/30">Thickness: ~500m - 1000m</span>
+                            </div>
+                            <p class="text-slate-300 mb-6">The uppermost sequence of the basin, marking a final major marine transgression over the craton and a return to carbonate precipitation.</p>
+                            
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                                    <h4 class="font-bold text-white mb-2"><i class="fa-solid fa-hammer text-slate-400 mr-2"></i>Lithology & Formations</h4>
+                                    <p class="text-sm text-slate-400 mb-2">Comprises the <strong>Ganurgarh Shale</strong>, the massive <strong>Bhander (Nagod) Limestone</strong>, the thick <strong>Sirbu Shale</strong>, and caps with the <strong>Maihar Sandstone</strong>.</p>
+                                    <ul class="text-xs text-slate-500 list-disc pl-4 space-y-1">
+                                        <li>Bhander Limestone is rich in complex stromatolite colonies (<em>Baicalia, Colonella</em>).</li>
+                                        <li>Maihar Sandstone is a highly valued architectural building stone.</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                                    <h4 class="font-bold text-white mb-2"><i class="fa-solid fa-water text-slate-400 mr-2"></i>Paleoenvironment</h4>
+                                    <p class="text-sm text-slate-400">Extensive shallow marine lagoons, protected carbonate platforms, and broad intertidal mudflats. Climate was likely arid to semi-arid.</p>
+                                    <p class="text-sm text-slate-500 mt-2 font-mono text-xs">Evidence: Halite casts in Sirbu Shale, widespread stromatolite bioherms.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Field Note: Lithology Properties -->
+                <div class="bg-slate-850 border-l-4 border-l-blue-500 p-6 rounded-r-xl shadow-md">
+                    <h4 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-vial mr-2 text-blue-500"></i>Field Rock Identification Matrix</h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm border-collapse">
+                            <thead>
+                                <tr class="bg-slate-800 text-slate-300">
+                                    <th class="p-3 border border-slate-700">Rock Type</th>
+                                    <th class="p-3 border border-slate-700">Chemical Comp.</th>
+                                    <th class="p-3 border border-slate-700">Hardness</th>
+                                    <th class="p-3 border border-slate-700">Field Diagnostics</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-slate-400">
+                                <tr>
+                                    <td class="p-3 border border-slate-700 font-bold text-white">Limestone</td>
+                                    <td class="p-3 border border-slate-700 font-mono">CaCO₃</td>
+                                    <td class="p-3 border border-slate-700">~3 (Mohs)</td>
+                                    <td class="p-3 border border-slate-700 text-amber-200">Effervesces vigorously with 10% dilute HCl. Massive habit.</td>
+                                </tr>
+                                <tr class="bg-slate-900/50">
+                                    <td class="p-3 border border-slate-700 font-bold text-white">Shale</td>
+                                    <td class="p-3 border border-slate-700 font-mono">Clay minerals + SiO₂</td>
+                                    <td class="p-3 border border-slate-700">2.5 - 3</td>
+                                    <td class="p-3 border border-slate-700">Pronounced fissility (splits into thin sheets). Earthy luster.</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 border border-slate-700 font-bold text-white">Sandstone</td>
+                                    <td class="p-3 border border-slate-700 font-mono">SiO₂ (Quartz dominant)</td>
+                                    <td class="p-3 border border-slate-700">6.5 - 7</td>
+                                    <td class="p-3 border border-slate-700">Scratches steel/glass. Granular fracture. Cross-bedding common.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sedimentology -->
+            <section id="sedimentology" class="scroll-mt-24 section-block">
+                <div class="flex items-center space-x-4 mb-8 border-b border-slate-700 pb-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 ring-1 ring-amber-500/20">
+                        <i class="fa-solid fa-water text-2xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-100 tracking-tight">Sedimentology & Bedforms</h2>
+                </div>
+
+                <p class="mb-8">
+                    Because the Vindhyan basin suffered virtually no deformation, primary sedimentary structures are immaculately preserved. Our transects involved detailed logging of paleocurrent indicators and energy states.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-12">
+                    <div class="space-y-6">
+                        <div class="bg-slate-800/60 p-6 rounded-xl border border-slate-700">
+                            <h4 class="text-xl font-bold text-amber-400 mb-3"><i class="fa-solid fa-wind mr-2"></i>Cross-Bedding</h4>
+                            <p class="text-sm text-slate-300 mb-3">Extensively observed in the Kaimur sandstones. Layers are inclined relative to the horizontal bedding planes.</p>
+                            <ul class="text-sm text-slate-400 list-disc pl-5 space-y-1">
+                                <li><strong>Genesis:</strong> Migration of ripples/dunes by strong currents.</li>
+                                <li><strong>Interpretation:</strong> High-energy fluvial channels or strong coastal tidal currents. We measured paleocurrent azimuths predominantly flowing North-West.</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-slate-800/60 p-6 rounded-xl border border-slate-700">
+                            <h4 class="text-xl font-bold text-amber-400 mb-3"><i class="fa-solid fa-water mr-2"></i>Ripple Marks</h4>
+                            <p class="text-sm text-slate-300 mb-3">Exposed on vast sandstone bedding planes.</p>
+                            <ul class="text-sm text-slate-400 list-disc pl-5 space-y-1">
+                                <li><strong>Symmetrical:</strong> Formed by oscillatory wave action (shallow marine/beach).</li>
+                                <li><strong>Asymmetrical:</strong> Formed by unidirectional flow (river environments).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Image Block -->
+                    <figure class="rounded-xl overflow-hidden border border-slate-700 relative h-full min-h-[300px]">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFBNDsuxTxUGdNcQ6HPTwnv391iAOTRkU82Q&s" alt="Cross Bedding Structure" class="w-full h-full object-cover">
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950 to-transparent p-6 pt-12">
+                            <p class="text-white font-bold text-sm"><i class="fa-solid fa-camera mr-2 text-amber-500"></i>Field Photo: Trough Cross-Bedding</p>
+                            <p class="text-xs text-slate-300 mt-1">Observed in the Dhandraul Quartzite formation (Kaimur Group), indicating high-energy channelized flow.</p>
+                        </div>
+                    </figure>
+                </div>
+
+                <!-- Desiccation Cracks Field Note -->
+                <div class="bg-slate-900 border border-slate-700 rounded-xl p-6 flex flex-col md:flex-row gap-6 items-center">
+                    <div class="md:w-2/3">
+                        <h4 class="text-lg font-bold text-white mb-2"><i class="fa-solid fa-sun mr-2 text-orange-500"></i>Desiccation (Mud) Cracks</h4>
+                        <p class="text-sm text-slate-400 mb-4">
+                            We documented spectacular polygonal mud cracks in the Sirbu Shale (Bhander Group). These structures are definitive evidence of alternating wet and dry conditions.
+                        </p>
+                        <p class="text-sm text-slate-400">
+                            <strong>Environmental Inference:</strong> Extensive intertidal mudflats that were periodically exposed to the sun and air, causing the muddy sediments to shrink and crack before being buried by the next tide.
+                        </p>
+                    </div>
+                    <div class="md:w-1/3 bg-slate-800 p-4 rounded-lg text-center border border-slate-700">
+                        <i class="fa-solid fa-arrow-right-arrow-left text-3xl text-slate-500 mb-2"></i>
+                        <p class="text-xs text-amber-500 font-bold uppercase">Energy State Indicator</p>
+                        <p class="text-lg font-bold text-white mt-1">Fluctuating</p>
+                        <p class="text-xs text-slate-400">Tidal / Ephemeral</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Paleontology -->
+            <section id="paleontology" class="scroll-mt-24 section-block">
+                <div class="flex items-center space-x-4 mb-8 border-b border-slate-700 pb-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 ring-1 ring-amber-500/20">
+                        <i class="fa-solid fa-microscope text-2xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-100 tracking-tight">Paleontology & Early Biosphere</h2>
+                </div>
+
+                <div class="grid md:grid-cols-5 gap-8">
+                    <div class="md:col-span-3">
+                        <p class="mb-4">
+                            Unlike Phanerozoic basins rich in complex fossils, the Vindhyan basin requires a different paleontological approach. Belonging to the Proterozoic era, life here was dominated by simple, microscopic, microbial organisms. 
+                        </p>
+                        <p class="mb-6">
+                            There are absolute absences of vertebrates or higher plants. However, the basin is a world-class laboratory for studying the <strong>Proterozoic Biosphere</strong> and the "boring billion" years of Earth's history where atmospheric oxygen levels were gradually increasing due to cyanobacterial photosynthesis.
+                        </p>
+
+                        <div class="space-y-4">
+                            <div class="bg-slate-800/40 p-4 rounded-lg border-l-2 border-emerald-500">
+                                <h4 class="font-bold text-emerald-400">Macrofossils: <em>Grypania</em> & <em>Chuaria</em></h4>
+                                <p class="text-sm text-slate-300 mt-1">Carbonaceous macroscopic impressions found in the Rohtas Formation. <em>Grypania spiralis</em> represents one of the oldest known eukaryotic (and potentially multicellular) algal organisms, pushing back the timeline of complex life evolution.</p>
+                            </div>
+                            <div class="bg-slate-800/40 p-4 rounded-lg border-l-2 border-emerald-500">
+                                <h4 class="font-bold text-emerald-400">Microbial Mats & MISS</h4>
+                                <p class="text-sm text-slate-300 mt-1">Microbially Induced Sedimentary Structures (MISS) like "wrinkle structures" were observed on sandstone bedding planes. These form when microbial mats bind sand grains together, protecting them from erosion.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <Card class="bg-slate-900 border border-slate-700 p-6 rounded-xl h-full shadow-lg">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-MqAmvUKtJovFANQRBFVqRec7u5kfkhODJQ&s" alt="Stromatolites texture" class="w-full h-48 object-cover rounded-lg mb-4 opacity-80">
+                            <h4 class="text-xl font-bold text-white mb-2">Stromatolites</h4>
+                            <p class="text-sm text-slate-400 mb-4">
+                                The most spectacular fossil evidence we encountered. These are bio-sedimentary structures formed by the trapping, binding, and precipitation of calcium carbonate by cyanobacteria.
+                            </p>
+                            <ul class="text-xs text-amber-200/80 font-mono space-y-2">
+                                <li>> Found abundantly in Semri & Bhander limestones.</li>
+                                <li>> Indicates shallow, sunlit marine environments.</li>
+                                <li>> Primary drivers of Proterozoic oxygenation.</li>
+                            </ul>
+                        </Card>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tectonic Evolution -->
+            <section id="tectonics" class="scroll-mt-24 section-block">
+                <div class="flex items-center space-x-4 mb-8 border-b border-slate-700 pb-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 ring-1 ring-amber-500/20">
+                        <i class="fa-solid fa-chart-area text-2xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-100 tracking-tight">Tectonic Evolution & Subsidence</h2>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl p-8 mb-8">
+                    <h3 class="text-xl font-bold text-white mb-4">The Rift vs. Sag Basin Debate</h3>
+                    <p class="text-slate-300 mb-6">
+                        A major objective of our field mapping was assessing the mechanism of basin formation. The debate centers on whether the Vindhyan initiated as an active rift basin or a passive sag basin.
+                    </p>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm border-collapse">
+                            <thead>
+                                <tr class="bg-slate-800 text-slate-300">
+                                    <th class="p-3 border border-slate-700">Feature</th>
+                                    <th class="p-3 border border-slate-700 text-red-400 font-bold">Rift Basin Model</th>
+                                    <th class="p-3 border border-slate-700 text-blue-400 font-bold">Sag Basin Model</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-slate-400">
+                                <tr>
+                                    <td class="p-3 border border-slate-700 font-bold text-white">Driving Mechanism</td>
+                                    <td class="p-3 border border-slate-700">Active crustal extension / stretching</td>
+                                    <td class="p-3 border border-slate-700">Thermal cooling and lithospheric subsidence</td>
+                                </tr>
+                                <tr class="bg-slate-900/50">
+                                    <td class="p-3 border border-slate-700 font-bold text-white">Faulting</td>
+                                    <td class="p-3 border border-slate-700">Strong normal faulting (Graben structures)</td>
+                                    <td class="p-3 border border-slate-700">Minimal to no faulting; gentle downwarping</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 border border-slate-700 font-bold text-white">Basin Geometry</td>
+                                    <td class="p-3 border border-slate-700">Narrow, deep, fault-bounded</td>
+                                    <td class="p-3 border border-slate-700">Broad, shallow, saucer-shaped</td>
+                                </tr>
+                                <tr class="bg-slate-900/50">
+                                    <td class="p-3 border border-slate-700 font-bold text-white">Volcanism</td>
+                                    <td class="p-3 border border-slate-700">Common (bimodal volcanics)</td>
+                                    <td class="p-3 border border-slate-700">Generally absent</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="mt-6 bg-amber-900/20 border border-amber-500/30 p-4 rounded-lg">
+                        <p class="text-sm text-amber-200">
+                            <strong>Field Conclusion:</strong> The presence of volcaniclastics (Porcellanite) and basal faulting in the Lower Vindhyan (Semri) suggests an initial <strong>Rift phase</strong> along weaknesses like the SNL. However, the vast, uniform, unfaulted sequences of the Upper Vindhyan heavily point toward a subsequent <strong>Thermal Sag phase</strong>, driven by cooling and sediment loading over millions of years.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Geochemistry & Provenance -->
+            <section id="geochemistry" class="scroll-mt-24 section-block">
+                <div class="flex items-center space-x-4 mb-8 border-b border-slate-700 pb-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 ring-1 ring-amber-500/20">
+                        <i class="fa-solid fa-flask text-2xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-100 tracking-tight">Geochemistry & Provenance</h2>
+                </div>
+
+                <p class="mb-8">
+                    To determine where these massive volumes of sediment came from (Provenance), we collected sandstone and shale samples for laboratory geochemical analysis. 
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-slate-800/50 p-6 rounded-xl border-l-4 border-l-blue-500 shadow-md">
+                        <h3 class="text-lg font-bold text-white mb-2">Mineralogical Maturity & Source</h3>
+                        <p class="text-sm text-slate-400 mb-3">
+                            Petrographic thin sections reveal Kaimur sandstones are >95% quartz (Quartz Arenites) with well-rounded grains. Unstable minerals like feldspar are virtually absent.
+                        </p>
+                        <p class="text-sm text-slate-300 font-medium">
+                            <i class="fa-solid fa-arrow-right text-amber-500 mr-2"></i>Indicates derivation from a stable, old, felsic continental crust (Bundelkhand Granite) followed by long transport and extensive reworking.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-800/50 p-6 rounded-xl border-l-4 border-l-orange-500 shadow-md">
+                        <h3 class="text-lg font-bold text-white mb-2">Chemical Index of Alteration (CIA)</h3>
+                        <p class="text-sm text-slate-400 mb-3">
+                            Major oxide analysis yields moderate to high CIA values. This quantifies the ratio of immobile elements (Al) to mobile elements (Ca, Na, K) washed away during weathering.
+                        </p>
+                        <p class="text-sm text-slate-300 font-medium">
+                            <i class="fa-solid fa-arrow-right text-amber-500 mr-2"></i>Indicates intense, prolonged chemical weathering in the source area under a warm, humid paleoclimate.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-800/50 p-6 rounded-xl border-l-4 border-l-purple-500 shadow-md md:col-span-2">
+                        <h3 class="text-lg font-bold text-white mb-2">Rare Earth Elements (REE) Signatures</h3>
+                        <p class="text-sm text-slate-400 mb-3">
+                            Trace element geochemistry shows enrichment in Light REEs (LREE), depletion in Heavy REEs (HREE), and a pronounced negative Europium (Eu) anomaly.
+                        </p>
+                        <p class="text-sm text-slate-300 font-medium">
+                            <i class="fa-solid fa-arrow-right text-amber-500 mr-2"></i>The negative Eu anomaly is a classic geochemical fingerprint for upper continental crust / granitic source rocks, ruling out mafic (basaltic) oceanic sources.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Economic Importance -->
+            <section id="economic" class="scroll-mt-24 section-block">
+                <div class="flex items-center space-x-4 mb-8 border-b border-slate-700 pb-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 ring-1 ring-amber-500/20">
+                        <i class="fa-solid fa-gem text-2xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-100 tracking-tight">Economic Geology</h2>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="group relative overflow-hidden rounded-2xl bg-slate-900 border border-slate-700 p-6 hover:border-slate-400 transition-colors duration-300">
+                        <div class="text-4xl text-slate-600 mb-4"><i class="fa-solid fa-industry"></i></div>
+                        <h3 class="text-xl font-bold text-white mb-3">Limestone Reserves</h3>
+                        <p class="text-slate-400 text-sm">
+                            The Semri and Bhander groups host enormous, thick layers of high-grade limestone. These are extensively mined across Madhya Pradesh and Rajasthan, forming the backbone of India's cement and metallurgy industries.
+                        </p>
+                    </div>
+
+                    <div class="group relative overflow-hidden rounded-2xl bg-slate-900 border border-slate-700 p-6 hover:border-orange-500 transition-colors duration-300">
+                        <div class="text-4xl text-orange-800 mb-4"><i class="fa-solid fa-monument"></i></div>
+                        <h3 class="text-xl font-bold text-orange-500 mb-3">Building Dimension Stone</h3>
+                        <p class="text-slate-400 text-sm">
+                            The highly mature Kaimur and Rewa sandstones are exceptionally hard, compact, and durable. They have been historically quarried for centuries—used in iconic structures like the Red Fort, Sanchi Stupa, and modern civil construction.
+                        </p>
+                    </div>
+
+                    <div class="group relative overflow-hidden rounded-2xl bg-slate-900 border border-slate-700 p-6 hover:border-cyan-500 transition-colors duration-300">
+                        <div class="text-4xl text-cyan-900 mb-4"><i class="fa-regular fa-gem"></i></div>
+                        <h3 class="text-xl font-bold text-cyan-500 mb-3">Diamondiferous Placers</h3>
+                        <p class="text-slate-400 text-sm">
+                            The Rewa group contains specific conglomerate beds in the Panna region that are diamond-bearing. As India's primary diamond belt, these secondary placer deposits are economically and culturally significant, supporting local mining communities.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Conclusion -->
+            <section class="scroll-mt-24 pt-12 border-t border-slate-800 section-block" id="conclusion">
+                <h2 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500 mb-8 tracking-tight">Conclusion</h2>
+                <div class="text-lg text-slate-300 space-y-6">
+                    <p>
+                        Our field expedition across the <strong>Vindhyan Basin</strong> confirmed its status as a world-class geological archive. It holds an outstanding, nearly continuous record of the Proterozoic Eon. Stratigraphically, we mapped a dynamic yet persistent landscape: shifting from early stable marine carbonate ramps (Semri Group), regressing into high-energy, river-driven continental environments (Kaimur & Rewa), before a final transgression cycled back to calm marine conditions (Bhander).
+                    </p>
+                    <p>
+                        The immaculate preservation of physical footprints—ripple marks, cross-bedding, and mud cracks—allowed us to definitively reconstruct ancient water levels and energy states. Crucially, the extensive stromatolite bioherms prove that early microbial life was actively sculpting carbonate platforms and oxygenating the atmosphere, making the basin a literal "time capsule" for the early biosphere.
+                    </p>
+                    <p>
+                        Structurally, the basin represents classic intracratonic development. It evolved over the stable Bundelkhand Craton through a process of initial margin faulting followed by slow, steady thermal subsidence, receiving recycled, highly weathered sediments from the cratonic interior. 
+                    </p>
+                    <div class="text-xl font-medium text-amber-100 border-l-4 border-amber-500 pl-6 py-4 mt-8 bg-amber-500/10 rounded-r-lg shadow-inner">
+                        Ultimately, the Vindhyan Basin is much more than a collection of old rocks. It is a vital economic engine for the region and a scientific bridge to Earth's distant past, offering a rare, pristine look at how our planet's crust, atmosphere, and early life interacted over a billion years ago.
+                    </div>
+                </div>
+            </section>
+
+            <!-- References -->
+            <section class="scroll-mt-24 pt-12 pb-12 section-block">
+                <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-6"><i class="fa-solid fa-bookmark mr-2"></i>Literature & Field References</h3>
+                <ul class="grid md:grid-cols-2 gap-4 text-sm text-slate-400">
+                    <li class="bg-slate-900/50 p-3 rounded border border-slate-800 hover:border-slate-600 transition-colors">Valdiya, K. S. (2010). <em>The Making of India: Geodynamic Evolution</em>. Springer, New Delhi.</li>
+                    <li class="bg-slate-900/50 p-3 rounded border border-slate-800 hover:border-slate-600 transition-colors">Krishnan, M. S. (1982). <em>Geology of India and Burma</em>. CBS Publishers, Delhi.</li>
+                    <li class="bg-slate-900/50 p-3 rounded border border-slate-800 hover:border-slate-600 transition-colors">Naqvi, S. M. (2005). <em>Geology and Evolution of the Indian Plate</em>. Capital Publishing Company.</li>
+                    <li class="bg-slate-900/50 p-3 rounded border border-slate-800 hover:border-slate-600 transition-colors">Roy, A. B. and Jakhar, S. R. (2002). <em>Geology of Rajasthan (Northwest India)</em>. Scientific Publishers.</li>
+                    <li class="bg-slate-900/50 p-3 rounded border border-slate-800 hover:border-slate-600 transition-colors">Bose, P. K. et al. (2001). "Sedimentation patterns of the Proterozoic Vindhyan Supergroup." <em>Sedimentary Geology</em>.</li>
+                    <li class="bg-slate-900/50 p-3 rounded border border-slate-800 hover:border-slate-600 transition-colors">Chakraborty, P. P. (2006). "Sedimentary structures and facies analysis..." <em>Journal of Earth System Science</em>.</li>
+                    <li class="bg-slate-900/50 p-3 rounded border border-slate-800 hover:border-slate-600 transition-colors">Saha, D. and Tripathy, V. (2012). "Provenance and tectonic setting..." <em>Precambrian Research</em>.</li>
+                    <li class="bg-slate-900/50 p-3 rounded border border-slate-800 hover:border-slate-600 transition-colors">Field Maps and Publications provided by the Geological Survey of India (GSI).</li>
+                </ul>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Interactive JavaScript -->
+    <script>
+        // Stratigraphy Tabs Logic
+        function switchStratTab(tabId) {
+            // Hide all panes
+            const panes = document.querySelectorAll('.strat-pane');
+            panes.forEach(pane => {
+                pane.classList.remove('active', 'block', 'opacity-100');
+                pane.classList.add('hidden', 'opacity-0');
+            });
+
+            // Remove active state from all buttons
+            const btns = document.querySelectorAll('.strat-btn');
+            btns.forEach(btn => {
+                btn.classList.remove('active', 'text-amber-400', 'border-amber-500');
+                btn.classList.add('text-slate-500', 'border-transparent');
+            });
+
+            // Show selected pane
+            const activePane = document.getElementById(`pane-${tabId}`);
+            activePane.classList.remove('hidden', 'opacity-0');
+            // Slight delay to trigger CSS animation
+            setTimeout(() => {
+                activePane.classList.add('active', 'block', 'opacity-100');
+            }, 10);
+
+            // Set active state on button
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            activeBtn.classList.remove('text-slate-500', 'border-transparent');
+            activeBtn.classList.add('active', 'text-amber-400', 'border-amber-500');
+        }
+
+        // Scroll Spy Logic for Sidebar Navigation
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                const scrollY = window.pageYOffset;
+
+                sections.forEach(section => {
+                    const sectionHeight = section.offsetHeight;
+                    const sectionTop = section.offsetTop - 250; // Offset for sticky header/spacing
+                    
+                    if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                // Edge case for top of page
+                if (scrollY < 300) {
+                    current = 'abstract';
+                }
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    link.style.backgroundColor = 'transparent';
+                    link.style.color = '#94a3b8'; // text-slate-400
+                    link.style.borderColor = 'transparent';
+                    link.style.boxShadow = 'none';
+                    
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                        // Styles handled by CSS class .active but applying directly for specificity
+                        link.style.backgroundColor = 'rgba(245, 158, 11, 0.1)';
+                        link.style.color = '#fbbf24'; // text-amber-400
+                        link.style.borderColor = 'rgba(245, 158, 11, 0.2)';
+                        link.style.boxShadow = '0 0 15px rgba(245, 158, 11, 0.1)';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
